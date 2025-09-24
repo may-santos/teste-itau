@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  transactions   Event[]
+  accountBalance AccountBalance?
+}
+
+model AccountBalance {
+  id        Int      @id @default(autoincrement())
+  accountId String   @unique
+  balance   Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  client    Client   @relation(fields: [accountId], references: [id])
+
+  @@index([accountId])
+  @@map("account_balances")
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  type      String
+  amount    Float
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([clientId])
+  @@map("events")
+}
