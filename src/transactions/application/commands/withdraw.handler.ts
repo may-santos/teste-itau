@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { WithdrawCommand } from './withdraw.command';
 import { TransactionRepository } from 'src/transactions/infra/repositories/transaction.repository';
 import { TransactionDto } from '../dto/transaction.dto';
@@ -17,7 +17,7 @@ export class WithdrawHandler implements ICommandHandler<WithdrawCommand> {
     const amount = Math.abs(command.amount);
 
     const { balance } = await this.repo.getBalance(command.clientId);
-    if (balance < amount) throw new Error('Saldo insuficiente');
+    if (balance < amount) throw new BadRequestException('Saldo insuficiente');
 
     const transaction: TransactionDto = {
       accountId: command.accountId,

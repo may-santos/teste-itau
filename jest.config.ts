@@ -7,12 +7,9 @@ export default {
   rootDir: '.',
   moduleFileExtensions: ['js', 'json', 'ts'],
   testRegex: '.*\\.spec\\.ts$',
-  moduleNameMapper: {
-    ...pathsToModuleNameMapper(compilerOptions.paths, {
-      prefix: '<rootDir>/',
-    }),
-    '^generated/(.*)$': '<rootDir>/generated/$1',
-  },
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>/',
+  }),
   collectCoverageFrom: ['src/**/*.(t|j)s'],
   coverageDirectory: 'coverage',
 };
