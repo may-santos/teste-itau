@@ -14,6 +14,7 @@ import { FindAllClientsUseCase } from 'src/clients/application/usecase/find-all-
 import { FindClientByIdUsecase } from 'src/clients/application/usecase/find-client-by-id.usecase';
 import { UpdateClientUseCase } from 'src/clients/application/usecase/update-client.usecase';
 import { AuthGuard } from '@nestjs/passport';
+import { FindClientByEmailUseCase } from 'src/clients/application/usecase/find-client-by-email.usecase';
 
 @Controller('clients')
 @UseGuards(AuthGuard('jwt'))
@@ -24,6 +25,7 @@ export class ClientController {
     private readonly deleteClient: DeleteClientUseCase,
     private readonly findAllClients: FindAllClientsUseCase,
     private readonly findClientById: FindClientByIdUsecase,
+    private readonly findClientByEmail: FindClientByEmailUseCase,
   ) {}
 
   @Post()
@@ -52,5 +54,10 @@ export class ClientController {
   @Get(':id')
   async findById(@Param('id') id: string) {
     return this.findClientById.execute(id);
+  }
+
+  @Get('email/:email')
+  async findByEmail(@Param('email') email: string) {
+    return this.findClientByEmail.execute(email);
   }
 }

@@ -17,7 +17,10 @@ export class WithdrawHandler implements ICommandHandler<WithdrawCommand> {
     const amount = Math.abs(command.amount);
 
     const { balance } = await this.repo.getBalance(command.clientId);
-    if (balance < amount) throw new BadRequestException('Saldo insuficiente');
+    if (balance < amount)
+      throw new BadRequestException(
+        'Saldo insuficiente! Tente um cheque especial :)',
+      );
 
     const transaction: TransactionDto = {
       accountId: command.accountId,

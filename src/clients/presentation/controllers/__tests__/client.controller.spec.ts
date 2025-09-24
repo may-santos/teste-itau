@@ -6,6 +6,7 @@ import { DeleteClientUseCase } from 'src/clients/application/usecase/delete-clie
 import { FindAllClientsUseCase } from 'src/clients/application/usecase/find-all-clients.usecase';
 import { FindClientByIdUsecase } from 'src/clients/application/usecase/find-client-by-id.usecase';
 import { Client } from 'src/clients/domain/entities/client.entity';
+import { FindClientByEmailUseCase } from 'src/clients/application/usecase/find-client-by-email.usecase';
 
 describe('ClientController', () => {
   let controller: ClientController;
@@ -14,6 +15,7 @@ describe('ClientController', () => {
   let deleteClientUseCase: DeleteClientUseCase;
   let findAllClientsUseCase: FindAllClientsUseCase;
   let findClientByIdUseCase: FindClientByIdUsecase;
+  let findClientByEmail: FindClientByEmailUseCase;
 
   const mockClient = new Client('1', 'Test Client', 'test@example.com');
 
@@ -51,6 +53,12 @@ describe('ClientController', () => {
             execute: jest.fn().mockResolvedValue(mockClient),
           },
         },
+        {
+          provide: FindClientByEmailUseCase,
+          useValue: {
+            execute: jest.fn().mockResolvedValue(mockClient),
+          },
+        },
       ],
     }).compile();
 
@@ -63,6 +71,9 @@ describe('ClientController', () => {
     );
     findClientByIdUseCase = module.get<FindClientByIdUsecase>(
       FindClientByIdUsecase,
+    );
+    findClientByEmail = module.get<FindClientByEmailUseCase>(
+      FindClientByEmailUseCase,
     );
   });
 
@@ -117,6 +128,17 @@ describe('ClientController', () => {
       const result = await controller.findById(id);
 
       expect(findClientByIdUseCase.execute).toHaveBeenCalledWith(id);
+      expect(result).toEqual(mockClient);
+    });
+  });
+
+  describe('findByEmail', () => {
+    it('should return a client by email', async () => {
+      const email = 'test@example.com';
+
+      const result = await controller.findByEmail(email);
+
+      expect(findClientByEmail.execute).toHaveBeenCalledWith(email);
       expect(result).toEqual(mockClient);
     });
   });
